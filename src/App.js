@@ -1,11 +1,12 @@
-import React from "react";
+import React from 'react'
+import Header from './components/Header'
+import Body from './components/Body'
 
-const App = () => {
+export default function App() {
     return (
-        <h1>
-            Hello world! I am using React
-        </h1>
+        <div className="container">
+            <Header />
+            <Body />
+        </div>
     )
 }
-
-export default App

@@ -10,7 +10,7 @@ module.exports = {
     },
     target: 'web',
     devServer: {
-        port: '5000',
+        port: 5000,
         static: {
             directory: path.join(__dirname, 'public')
         },
@@ -27,6 +27,14 @@ module.exports = {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: 'babel-loader',
+            },
+            {
+                test: /\.(png|jpg|jpeg|gif|svg)$/i,
+                type: 'asset/resource',
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
             },
         ],
     },

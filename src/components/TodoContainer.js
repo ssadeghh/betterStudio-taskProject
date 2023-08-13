@@ -5,9 +5,7 @@ import Button from './Button';
 export default function TodoContainer({
     className,
     title,
-    tasksNum,
     requirementTasks,
-    check,
 }) {
     const tasks = requirementTasks || [];
 
@@ -24,7 +22,7 @@ export default function TodoContainer({
                     <Button type='delete' />
                 </div>
             ))}
-            <Button type='add' />
+            {className === 'done' ? '' : <Button type='add' />}
         </div>
     )
 }

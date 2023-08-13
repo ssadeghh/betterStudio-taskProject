@@ -56,19 +56,16 @@ export default function Body() {
             <TodoContainer
                 className="todo"
                 title="Todo"
-                tasksNum="3"
                 requirementTasks={todos.todo}
             />
             <TodoContainer
                 className="doing"
                 title="Doing 💪"
-                tasksNum="2"
                 requirementTasks={todos.doing}
             />
             <TodoContainer
                 className="done"
                 title="Done 🎉"
-                tasksNum="2"
                 requirementTasks={todos.done}
             />
         </div>

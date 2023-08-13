@@ -6,6 +6,7 @@ export default function TodoContainer({
     className,
     title,
     requirementTasks,
+    onDeleteTask,
 }) {
     const tasks = requirementTasks || [];
 
@@ -18,8 +19,7 @@ export default function TodoContainer({
 
             {tasks.map((task, index) => (
                 <div className="tasks" key={index}>
-                    <Task context={task.title} check={task.check} />
-                    <Button type='delete' />
+                    <Task context={task.title} check={task.check} handleDeleteTask={() => onDeleteTask(index)} />
                 </div>
             ))}
             {className === 'done' ? '' : <Button type='add' />}

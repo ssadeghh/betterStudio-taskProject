@@ -4,13 +4,18 @@ import Task from './Task'
 
 export default function Body() {
     const [todos, setTodos] = useState([]);
-    const [hasInitialData, setHasInitialData] = useState(false);
+
+    const handleDeleteTask = (taskIndex, section) => {
+        const updatedTodos = { ...todos };
+        updatedTodos[section] = todos[section].filter((_, index) => index !== taskIndex);
+        localStorage.setItem("todos", JSON.stringify(updatedTodos));
+        setTodos(updatedTodos);
+    };
 
     useEffect(() => {
-        const storedHasInitialData = localStorage.getItem("hasInitialData");
+        const storedHasInitialData = localStorage.getItem("hasInitialDataLS");
 
         if (storedHasInitialData) {
-            setHasInitialData(true);
             const storeTodos = localStorage.getItem("todos");
             if (storeTodos) {
                 setTodos(JSON.parse(storeTodos));
@@ -19,7 +24,8 @@ export default function Body() {
     }, []);
 
     useEffect(() => {
-        if (!hasInitialData) {
+        const hasInitialDataLS = localStorage.getItem("hasInitialDataLS");
+        if (!hasInitialDataLS) {
             // Pre-save initial information
             const preSavedData = {
                 todo: [
@@ -38,11 +44,10 @@ export default function Body() {
             };
 
             localStorage.setItem("todos", JSON.stringify(preSavedData));
-            localStorage.setItem("hasInitialData", true);
+            localStorage.setItem("hasInitialDataLS", true);
             setTodos(preSavedData);
-            setHasInitialData(true);
         }
-    }, [hasInitialData]);
+    }, []);
 
     // const saveDataToLocalStorage = () => {
     //     // Save data to localStorage
@@ -57,17 +62,17 @@ export default function Body() {
                 className="todo"
                 title="Todo"
                 requirementTasks={todos.todo}
-            />
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'todo')} />
             <TodoContainer
                 className="doing"
                 title="Doing 💪"
                 requirementTasks={todos.doing}
-            />
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'doing')} />
             <TodoContainer
                 className="done"
                 title="Done 🎉"
                 requirementTasks={todos.done}
-            />
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'done')} />
         </div>
     )
 }

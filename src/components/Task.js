@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
+import Button from './Button';
 
-export default function Task({ context, check }) {
+export default function Task({ context, check, handleDeleteTask, index }) {
     const [isEditing, setIsEditing] = useState(false)
     const [text, setText] = useState(context)
     const textareaRef = useRef(null)
@@ -32,7 +33,7 @@ export default function Task({ context, check }) {
     }, [isEditing])
 
     return (
-        <div className="task">
+        <div className={`task ${isEditing ? '' : 'dis-flex'}`}>
             <label className="checkbox-container">
                 <input
                     type="checkbox"
@@ -52,6 +53,12 @@ export default function Task({ context, check }) {
             ) : (
                 <span onClick={handleSpanClick} className={`${isChecked ? 'text-decoration' : ''}`}>{text}</span>
             )}
+            <Button
+                type='delete'
+                onClickFun={() => {
+                    handleDeleteTask(index);
+                }}
+            />
         </div>
     )
 }

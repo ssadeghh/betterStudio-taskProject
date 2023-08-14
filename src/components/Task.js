@@ -1,78 +1,77 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from './constants';
 import Button from './Button';
 
-export default function Task({ context, check, handleDeleteTask, index, setTodos, todos, requirementTasks, section }) {
+export default function Task({
+    context,
+    check,
+    handleDeleteTask,
+    index,
+    setTodos,
+    todos,
+    requirementTasks,
+    section,
+}) {
     const [, drag] = useDrag({
-        type: ItemTypes.TASK, // Specify the item type
-        item: { index, section }, // Data to be transferred during the drag
+        type: ItemTypes.TASK,
+        item: { index, section },
     });
-    const [isEditing, setIsEditing] = useState(false)
-    const [text, setText] = useState(context)
-    const textareaRef = useRef(null)
+
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [text, setText] = useState(context);
+    const inputRef = useRef(null);
     const [isChecked, setIsChecked] = useState(check);
 
-    const handleSpanClick = () => {
-        setIsEditing(true)
-    }
+    const handleTitleClick = () => {
+        setIsEditingTitle(true);
+    };
 
     const handleTextChange = (event) => {
-        setText(event.target.value)
-        // Update the corresponding task in the state
+        setText(event.target.value);
+    };
+
+    const handleBlur = () => {
+        setIsEditingTitle(false);
+
         const updatedTasks = [...requirementTasks];
-        updatedTasks[index].title = event.target.value;
+        updatedTasks[index].title = text;
         setTodos({
             ...todos,
             [section]: updatedTasks,
         });
-    }
-
-    const handleBlur = () => {
-        setIsEditing(false)
-    }
+    };
 
     const handleCheckboxChange = () => {
-        setIsChecked(prevIsChecked => !prevIsChecked); // Use functional update
+        setIsChecked((prevIsChecked) => !prevIsChecked);
 
-        // Create a copy of the task to move
         const taskToMove = { ...requirementTasks[index] };
+        taskToMove.check = isChecked ? 0 : 1;
 
-        // Update the task's check property
-        taskToMove.check = isChecked ? 0 : 1; // Reverse the check values
-
-        // Create new instances of task arrays
         const updatedSectionTasks = [...todos[section]];
-        const updatedTargetTasks = isChecked ? [...todos.todo] : [...todos.done]; // Reverse the target sections
+        const updatedTargetTasks = isChecked ? [...todos.todo] : [...todos.done];
 
-        // Remove task from the current section
         updatedSectionTasks.splice(index, 1);
-
-        // Push the copied task to the target section
         updatedTargetTasks.unshift(taskToMove);
 
-        // Update the state and localStorage
         setTimeout(() => {
             setTodos({
                 ...todos,
                 [section]: updatedSectionTasks,
-                [isChecked ? "todo" : "done"]: updatedTargetTasks // Reverse the target section keys
+                [isChecked ? 'todo' : 'done']: updatedTargetTasks,
             });
         }, 3000);
     };
 
-
     useEffect(() => {
-        if (isEditing && textareaRef.current) {
-            const textarea = textareaRef.current
-            const textLength = textarea.value.length
-            textarea.setSelectionRange(textLength, textLength)
-            textarea.focus()
+        if (isEditingTitle && inputRef.current) {
+            const input = inputRef.current;
+            input.focus();
         }
-    }, [isEditing])
+    }, [isEditingTitle]);
 
     return (
-        <div className={`task ${isEditing ? '' : 'dis-flex'}`} ref={drag}>
+        <div className={`task ${isEditingTitle ? '' : 'dis-flex'}`} ref={drag}>
             <label className="checkbox-container">
                 <input
                     type="checkbox"
@@ -81,23 +80,28 @@ export default function Task({ context, check, handleDeleteTask, index, setTodos
                 />
                 <span className={`checkmark ${isChecked ? 'checked' : ''}`}></span>
             </label>
-            {isEditing ? (
-                <textarea
-                    ref={textareaRef}
+            {isEditingTitle ? (
+                <input
+                    ref={inputRef}
                     value={text}
                     onChange={handleTextChange}
                     onBlur={handleBlur}
-                    className="task-textarea"
+                    className="task-input"
                 />
             ) : (
-                <span onClick={handleSpanClick} className={`${isChecked ? 'text-decoration' : ''}`}>{text ? text : (<input placeholder="new Task" className='new-task'></input>)}</span>
+                <span
+                    onClick={handleTitleClick}
+                    className={`${isChecked ? 'text-decoration' : ''}`}
+                >
+                    {text ? text : <input placeholder="new Task" className="new-task" />}
+                </span>
             )}
             <Button
-                type='delete'
+                type="delete"
                 onClickFun={() => {
                     handleDeleteTask(index);
                 }}
             />
         </div>
-    )
+    );
 }

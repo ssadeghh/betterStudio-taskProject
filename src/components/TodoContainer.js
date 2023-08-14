@@ -3,6 +3,7 @@ import Task from './Task'
 import Button from './Button';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from './constants';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function TodoContainer({
     className,
@@ -76,7 +77,7 @@ export default function TodoContainer({
             </div>
 
             {tasks.map((task, index) => (
-                <div className="tasks" key={index}>
+                <div className="tasks" key={uuidv4()}>
                     <Task
                         context={task.title}
                         check={task.check}

@@ -235,3 +235,18 @@
     border: 2px dashed #ddd;
     background-color: #f5f5f5;
 }
+
+.task-input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: pre-line; /* or white-space: normal; */
+    resize: none; /* Prevent textarea resize */
+}

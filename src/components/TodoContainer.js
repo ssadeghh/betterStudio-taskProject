@@ -30,7 +30,8 @@ export default function TodoContainer({
                         setTodos={setTodos}
                         todos={todos}
                         requirementTasks={requirementTasks}
-                        onAddTask={onAddTask} />
+                        onAddTask={onAddTask}
+                        section={className} />
                 </div>
             ))}
             {className === 'done' ? '' : <Button

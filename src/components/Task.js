@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Button from './Button';
 
-export default function Task({ context, check, handleDeleteTask, index }) {
+export default function Task({ context, check, handleDeleteTask, index, setTodos, todos, requirementTasks }) {
     const [isEditing, setIsEditing] = useState(false)
     const [text, setText] = useState(context)
     const textareaRef = useRef(null)
@@ -13,6 +13,13 @@ export default function Task({ context, check, handleDeleteTask, index }) {
 
     const handleTextChange = (event) => {
         setText(event.target.value)
+        // Update the corresponding task in the state
+        const updatedTasks = [...requirementTasks];
+        updatedTasks[index].title = event.target.value;
+
+        // Update localStorage
+        localStorage.setItem("todos", JSON.stringify(todos));
+        setTodos({ ...todos, [requirementTasks]: updatedTasks });
     }
 
     const handleBlur = () => {
@@ -21,6 +28,12 @@ export default function Task({ context, check, handleDeleteTask, index }) {
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
+        const updatedTasks = [...requirementTasks];
+        updatedTasks[index].check = !isChecked ? 1 : 0;
+
+        // Update localStorage
+        localStorage.setItem("todos", JSON.stringify(todos));
+        setTodos({ ...todos, [requirementTasks]: updatedTasks });
     };
 
     useEffect(() => {
@@ -51,7 +64,7 @@ export default function Task({ context, check, handleDeleteTask, index }) {
                     className="task-textarea"
                 />
             ) : (
-                <span onClick={handleSpanClick} className={`${isChecked ? 'text-decoration' : ''}`}>{text}</span>
+                <span onClick={handleSpanClick} className={`${isChecked ? 'text-decoration' : ''}`}>{text ? text : (<input placeholder="new Task" className='new-task'></input>)}</span>
             )}
             <Button
                 type='delete'

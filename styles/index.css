@@ -31,7 +31,7 @@
     display: flex;
     gap: 20px;
 
-    @media (max-width: 760px) {
+    @media (max-width: 860px) {
         flex-direction: column;
     }
 
@@ -155,6 +155,11 @@
 
     &:hover .delete {
         display: block;
+    }
+
+    .new-task {
+        outline: none;
+        border: none;
     }
 }
 

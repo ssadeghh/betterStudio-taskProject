@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import TodoContainer from './TodoContainer'
-import Task from './Task'
 
 export default function Body() {
     const [todos, setTodos] = useState([]);
@@ -8,6 +7,13 @@ export default function Body() {
     const handleDeleteTask = (taskIndex, section) => {
         const updatedTodos = { ...todos };
         updatedTodos[section] = todos[section].filter((_, index) => index !== taskIndex);
+        localStorage.setItem("todos", JSON.stringify(updatedTodos));
+        setTodos(updatedTodos);
+    };
+
+    const handleAddTask = (newTask, section) => {
+        const updatedTodos = { ...todos };
+        updatedTodos[section] = [...updatedTodos[section], newTask];
         localStorage.setItem("todos", JSON.stringify(updatedTodos));
         setTodos(updatedTodos);
     };
@@ -62,17 +68,29 @@ export default function Body() {
                 className="todo"
                 title="Todo"
                 requirementTasks={todos.todo}
-                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'todo')} />
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'todo')}
+                setTodos={setTodos}
+                todos={todos}
+                onAddTask={(newTask) => handleAddTask(newTask, 'todo')}
+            />
             <TodoContainer
                 className="doing"
                 title="Doing 💪"
                 requirementTasks={todos.doing}
-                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'doing')} />
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'doing')}
+                setTodos={setTodos}
+                todos={todos}
+                onAddTask={(newTask) => handleAddTask(newTask, 'doing')}
+            />
             <TodoContainer
                 className="done"
                 title="Done 🎉"
                 requirementTasks={todos.done}
-                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'done')} />
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'done')}
+                setTodos={setTodos}
+                todos={todos} />
         </div>
     )
 }
+
+

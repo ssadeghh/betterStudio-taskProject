@@ -230,3 +230,8 @@
 .checkbox-container:hover .checkmark {
     background-color: #ccc;
 }
+
+.dragging-over {
+    border: 2px dashed #ddd;
+    background-color: #f5f5f5;
+}

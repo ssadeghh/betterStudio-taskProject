@@ -6,28 +6,15 @@ export default function Body() {
 
     const handleDeleteTask = (taskIndex, section) => {
         const updatedTodos = { ...todos };
-        updatedTodos[section] = todos[section].filter((_, index) => index !== taskIndex);
-        localStorage.setItem("todos", JSON.stringify(updatedTodos));
-        setTodos(updatedTodos);
+        updatedTodos[section] = updatedTodos[section].filter((_, index) => index !== taskIndex);
+        setTodos(updatedTodos)
     };
 
     const handleAddTask = (newTask, section) => {
         const updatedTodos = { ...todos };
-        updatedTodos[section] = [...updatedTodos[section], newTask];
-        localStorage.setItem("todos", JSON.stringify(updatedTodos));
-        setTodos(updatedTodos);
+        updatedTodos[section] = [newTask, ...todos[section]];
+        setTodos(updatedTodos)
     };
-
-    useEffect(() => {
-        const storedHasInitialData = localStorage.getItem("hasInitialDataLS");
-
-        if (storedHasInitialData) {
-            const storeTodos = localStorage.getItem("todos");
-            if (storeTodos) {
-                setTodos(JSON.parse(storeTodos));
-            }
-        }
-    }, []);
 
     useEffect(() => {
         const hasInitialDataLS = localStorage.getItem("hasInitialDataLS");
@@ -48,19 +35,21 @@ export default function Body() {
                     { title: 'Congratulate yourself for incorporating healthier habits into your lifestyle, like regular exercise or mindful eating', check: 1 }
                 ]
             };
-
             localStorage.setItem("todos", JSON.stringify(preSavedData));
-            localStorage.setItem("hasInitialDataLS", true);
+            localStorage.setItem("hasInitialDataLS", "true");
             setTodos(preSavedData);
+        } else {
+            const storeTodos = localStorage.getItem("todos");
+            if (storeTodos) {
+                setTodos(JSON.parse(storeTodos));
+            }
         }
     }, []);
 
-    // const saveDataToLocalStorage = () => {
-    //     // Save data to localStorage
-    //     const dataToSave = { todo: ['another one'] };
-    //     localStorage.setItem("todos", JSON.stringify(dataToSave));
-    //     setTodos(dataToSave); // Update state
-    // };
+    useEffect(() => {
+        // Update localStorage whenever todos state changes
+        localStorage.setItem("todos", JSON.stringify(todos));
+    }, [todos]); // This effect runs whenever todos change
 
     return (
         <div className="body">

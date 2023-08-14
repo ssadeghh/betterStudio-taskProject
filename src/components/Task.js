@@ -1,7 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from './constants';
 import Button from './Button';
 
 export default function Task({ context, check, handleDeleteTask, index, setTodos, todos, requirementTasks, section }) {
+    const [, drag] = useDrag({
+        type: ItemTypes.TASK, // Specify the item type
+        item: { index, section }, // Data to be transferred during the drag
+    });
     const [isEditing, setIsEditing] = useState(false)
     const [text, setText] = useState(context)
     const textareaRef = useRef(null)
@@ -16,10 +22,10 @@ export default function Task({ context, check, handleDeleteTask, index, setTodos
         // Update the corresponding task in the state
         const updatedTasks = [...requirementTasks];
         updatedTasks[index].title = event.target.value;
-
-        // Update localStorage
-        localStorage.setItem("todos", JSON.stringify(todos));
-        setTodos({ ...todos, [requirementTasks]: updatedTasks });
+        setTodos({
+            ...todos,
+            [section]: updatedTasks,
+        });
     }
 
     const handleBlur = () => {
@@ -27,36 +33,32 @@ export default function Task({ context, check, handleDeleteTask, index, setTodos
     }
 
     const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
+        setIsChecked(prevIsChecked => !prevIsChecked); // Use functional update
 
         // Create a copy of the task to move
         const taskToMove = { ...requirementTasks[index] };
 
         // Update the task's check property
-        taskToMove.check = isChecked ? 0 : 1;
+        taskToMove.check = isChecked ? 0 : 1; // Reverse the check values
 
         // Create new instances of task arrays
         const updatedSectionTasks = [...todos[section]];
-        const updatedDoneTasks = [...todos.done];
+        const updatedTargetTasks = isChecked ? [...todos.todo] : [...todos.done]; // Reverse the target sections
 
         // Remove task from the current section
         updatedSectionTasks.splice(index, 1);
 
-        // Push the copied task to the "Done" section
-        updatedDoneTasks.push(taskToMove);
+        // Push the copied task to the target section
+        updatedTargetTasks.unshift(taskToMove);
 
         // Update the state and localStorage
-        setTodos({
-            ...todos,
-            [section]: updatedSectionTasks,
-            done: updatedDoneTasks
-        });
-
-        localStorage.setItem("todos", JSON.stringify({
-            ...todos,
-            [section]: updatedSectionTasks,
-            done: updatedDoneTasks
-        }));
+        setTimeout(() => {
+            setTodos({
+                ...todos,
+                [section]: updatedSectionTasks,
+                [isChecked ? "todo" : "done"]: updatedTargetTasks // Reverse the target section keys
+            });
+        }, 3000);
     };
 
 
@@ -70,7 +72,7 @@ export default function Task({ context, check, handleDeleteTask, index, setTodos
     }, [isEditing])
 
     return (
-        <div className={`task ${isEditing ? '' : 'dis-flex'}`}>
+        <div className={`task ${isEditing ? '' : 'dis-flex'}`} ref={drag}>
             <label className="checkbox-container">
                 <input
                     type="checkbox"

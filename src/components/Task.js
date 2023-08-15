@@ -12,6 +12,7 @@ export default function Task({
     todos,
     requirementTasks,
     section,
+    onAddTask
 }) {
     const [, drag] = useDrag({
         type: ItemTypes.TASK,
@@ -73,6 +74,28 @@ export default function Task({
         timeoutRef.current = newTimeout; // Store the reference to the new timeout
     };
 
+    const handlePaste = (event) => {
+        event.preventDefault();
+        const clipboardText = event.clipboardData.getData('text/plain');
+        console.log(clipboardText)
+        const lines = clipboardText.split('\n').filter(line => line.trim() !== '');
+
+        if (lines.length > 0) {
+            lines.forEach(line => {
+                onAddTask({ title: line, check: 0 }); // Add each line as a new task
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.addEventListener('paste', handlePaste);
+            return () => {
+                inputRef.current.removeEventListener('paste', handlePaste);
+            };
+        }
+    }, [inputRef, onAddTask]);
+
     useEffect(() => {
         if (isEditingTitle && inputRef.current) {
             const input = inputRef.current;
@@ -97,6 +120,7 @@ export default function Task({
                     onChange={handleTextChange}
                     onBlur={handleBlur}
                     className="task-input"
+
                 />
             ) : (
                 <span

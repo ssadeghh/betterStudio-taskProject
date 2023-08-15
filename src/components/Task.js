@@ -19,6 +19,7 @@ export default function Task({
     });
 
     const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [taskCheck, setTaskCheck] = useState([])
     const [text, setText] = useState(context);
     const inputRef = useRef(null);
     const [isChecked, setIsChecked] = useState(check);
@@ -42,25 +43,34 @@ export default function Task({
         });
     };
 
+    const timeoutRef = useRef(null);
+
     const handleCheckboxChange = () => {
         setIsChecked((prevIsChecked) => !prevIsChecked);
-
         const taskToMove = { ...requirementTasks[index] };
+        setTaskCheck(taskToMove.check)
         taskToMove.check = isChecked ? 0 : 1;
 
-        const updatedSectionTasks = [...todos[section]];
-        const updatedTargetTasks = isChecked ? [...todos.todo] : [...todos.done];
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        const newTimeout = setTimeout(() => {
+            if (taskCheck !== taskToMove.check) {
+                const updatedSectionTasks = [...todos[section]];
+                const updatedTargetTasks = isChecked ? [...todos.todo] : [...todos.done];
 
-        updatedSectionTasks.splice(index, 1);
-        updatedTargetTasks.unshift(taskToMove);
+                updatedSectionTasks.splice(index, 1);
+                updatedTargetTasks.unshift(taskToMove);
 
-        setTimeout(() => {
-            setTodos({
-                ...todos,
-                [section]: updatedSectionTasks,
-                [isChecked ? 'todo' : 'done']: updatedTargetTasks,
-            });
+                setTodos({
+                    ...todos,
+                    [section]: updatedSectionTasks,
+                    [isChecked ? 'todo' : 'done']: updatedTargetTasks,
+                });
+            }
         }, 3000);
+
+        timeoutRef.current = newTimeout; // Store the reference to the new timeout
     };
 
     useEffect(() => {

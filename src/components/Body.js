@@ -77,7 +77,8 @@ export default function Body() {
                 requirementTasks={todos.done}
                 onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'done')}
                 setTodos={setTodos}
-                todos={todos} />
+                todos={todos}
+            />
         </div>
     )
 }

@@ -12,7 +12,7 @@ export default function TodoContainer({
     onDeleteTask,
     setTodos,
     todos,
-    onAddTask
+    onAddTask,
 }) {
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const ref = useRef();

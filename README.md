@@ -24,5 +24,32 @@ To use the Todo App, follow these steps:
 
 You are now ready to start managing your tasks with the Todo App!
 
+# Documentation Guidelines
+
+## How to Prepare Documentation for a Component
+
+### Title and Introduction
+Begin by providing a clear and succinct title for the proposed React component.
+
+### Props and State
+Explain the properties (props) and state that the component will utilize.
+
+### Component Hierarchy
+If the component is part of a larger application or system, elucidate how it integrates into the overall component hierarchy.
+
+### Data Flow
+Elaborate on how data will traverse into and out of the component. Describe any data sources, API calls, or parent-child component relationships.
+
+## Collaborative Development Practices
+
+### Version Control System
+Employ a version control system like GitHub to effectively track changes.
+
+### Code Review Process
+Implement a systematic code review process where team members evaluate each other's code changes before merging them into the primary codebase.
+
+## Personal Git and GitHub Experience
+Proficiency Level: Intermediate
+
 ---
 

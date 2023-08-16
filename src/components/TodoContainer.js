@@ -21,16 +21,15 @@ export default function TodoContainer({
         accept: ItemTypes.TASK,
         drop: (item) => {
             const { index: originalIndex, section: originalSection } = item;
-            const newSection = className; // The current section where the drop occurred
+            const newSection = className;
             if (originalSection !== newSection) {
-                // Handle the task movement from originalSection to newSection
                 const updatedOriginalTasks = [...todos[originalSection]];
                 const updatedNewTasks = [...todos[newSection]];
                 const taskToMove = updatedOriginalTasks.splice(originalIndex, 1)[0];
                 if (className === 'done') {
                     taskToMove.check = 1;
                 } else {
-                    taskToMove.check = 0; // Reset check status when moving tasks
+                    taskToMove.check = 0;
                 }
                 updatedNewTasks.unshift(taskToMove);
 
@@ -47,8 +46,7 @@ export default function TodoContainer({
     });
 
     useEffect(() => {
-        drop(ref); // Pass the ref of the container to the drop function
-
+        drop(ref);
         const handleDragOver = (event) => {
             event.preventDefault();
             setIsDraggingOver(true);

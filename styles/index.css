@@ -1,12 +1,14 @@
+/* Global styles */
 * {
     font-family: 'inter', sans-serif;
 }
 
+/* Container styles */
 .container {
     margin: 5% 10%;
 }
 
-/* header styles */
+/* Header styles */
 .top-header {
     display: flex;
     align-items: center;
@@ -22,108 +24,115 @@
     font-size: 40px;
 }
 
-/* body styles */
-
+/* Body styles */
 .body {
     margin-top: 60px;
     width: 100%;
     height: 100%;
     display: flex;
     gap: 20px;
+}
 
-    @media (max-width: 860px) {
+@media (max-width: 860px) {
+    .body {
         flex-direction: column;
-    }
-
-    .todo {
-        background-color: #fef4f3;
-
-        .todo-header h3 {
-            color: #6e1e29;
-        }
-        .todo-header small {
-            color: #d4afb4;
-        }
-
-        .add {
-            color: #d37a87;
-        }
-
-        .delete {
-            color: #f4c5cb;
-        }
-    }
-
-    .doing {
-        background-color: #fffbf2;
-
-        .todo-header h3 {
-            color: #795b19;
-        }
-
-        .todo-header small {
-            color: #decca4;
-        }
-
-        .add {
-            color: #c2a25b;
-        }
-
-        .delete {
-            color: #e1cfa7;
-        }
-    }
-
-    .done {
-        background-color: #f4f9f3;
-
-        .todo-header h3 {
-            color: #286c1a;
-        }
-
-        .todo-header small {
-            color: #bcd7b6;
-        }
-        .add {
-            color: #57a746;
-        }
-
-        .delete {
-            color: #c8e4c2;
-        }
     }
 }
 
+.todo {
+    background-color: #fef4f3;
+}
+
+.todo .todo-header h3 {
+    color: #6e1e29;
+}
+
+.todo .todo-header small {
+    color: #d4afb4;
+}
+
+.todo .add {
+    color: #d37a87;
+}
+
+.todo .delete {
+    color: #f4c5cb;
+}
+
+.doing {
+    background-color: #fffbf2;
+}
+
+.doing .todo-header h3 {
+    color: #795b19;
+}
+
+.doing .todo-header small {
+    color: #decca4;
+}
+
+.doing .add {
+    color: #c2a25b;
+}
+
+.doing .delete {
+    color: #e1cfa7;
+}
+
+.done {
+    background-color: #f4f9f3;
+}
+
+.done .todo-header h3 {
+    color: #286c1a;
+}
+
+.done .todo-header small {
+    color: #bcd7b6;
+}
+
+.done .add {
+    color: #57a746;
+}
+
+.done .delete {
+    color: #c8e4c2;
+}
+
+/* Todo container styles */
 .body .todo-container {
     border-radius: 10px;
     flex: 1;
     height: 100vh;
     padding: 20px 20px 30px 20px;
-
-    .add {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        font-size: 15px;
-        .icon-button {
-            opacity: 0.8;
-            margin-right: 10px;
-            font-size: 25px;
-        }
-    }
-
-    .delete {
-        background-color: transparent;
-        border: none;
-        font-size: 16px;
-        align-items: center;
-        display: none;
-        cursor: pointer;
-    }
+    transition: background-color 0.3s ease-in-out;
 }
 
+.todo-container .add {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+}
+
+.todo-container .add .icon-button {
+    opacity: 0.8;
+    margin-right: 10px;
+    font-size: 25px;
+}
+
+.todo-container .delete {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    align-items: center;
+    display: none;
+    cursor: pointer;
+}
+
+/* Todo header styles */
 .todo-header {
     height: 18px;
     display: flex;
@@ -132,8 +141,7 @@
     margin-bottom: 30px;
 }
 
-/* task styles */
-
+/* Task styles */
 .todo-container .tasks {
     margin: 15px auto;
     background-color: #fff;
@@ -152,15 +160,15 @@
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 10px;
+}
 
-    &:hover .delete {
-        display: block;
-    }
+.task:hover .delete {
+    display: block;
+}
 
-    .new-task {
-        outline: none;
-        border: none;
-    }
+.task .new-task {
+    outline: none;
+    border: none;
 }
 
 .todo-container .tasks span {
@@ -217,14 +225,15 @@
 
 .checkbox-container .checkmark.checked {
     background-color: transparent;
-    &:before {
-        content: '✓';
-        color: green;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+}
+
+.checkbox-container .checkmark.checked:before {
+    content: '✓';
+    color: green;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .checkbox-container:hover .checkmark {
@@ -233,7 +242,6 @@
 
 .dragging-over {
     border: 2px dashed #ddd;
-    background-color: #f5f5f5;
 }
 
 .task-input {
@@ -247,6 +255,6 @@
     cursor: pointer;
     font-size: 12px;
     font-weight: 600;
-    white-space: pre-line; /* or white-space: normal; */
-    resize: none; /* Prevent textarea resize */
+    white-space: pre-line;
+    resize: none;
 }

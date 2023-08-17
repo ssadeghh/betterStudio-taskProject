@@ -16,6 +16,7 @@ export default function TodoContainer({
 }) {
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const ref = useRef();
+    const [listChangeCheckedbox, setListChangeCheckedbox] = useState([])
 
     const [{ isOver }, drop] = useDrop({
         accept: ItemTypes.TASK,
@@ -44,6 +45,16 @@ export default function TodoContainer({
             isOver: !!monitor.isOver(),
         }),
     });
+
+    useEffect(() => {
+        setTimeout(() => {
+            console.log(listChangeCheckedbox);
+            listChangeCheckedbox.forEach((task) => {
+                console.log('task: ', task.title);
+                setTodos((prevTodos) => [...prevTodos, task]);
+            });
+        }, 3000);
+    }, [listChangeCheckedbox]);
 
     useEffect(() => {
         drop(ref);
@@ -85,7 +96,9 @@ export default function TodoContainer({
                         todos={todos}
                         requirementTasks={requirementTasks}
                         onAddTask={onAddTask}
-                        section={className} />
+                        section={className}
+                        listChangeCheckedbox={listChangeCheckedbox}
+                        setListChangeCheckedbox={setListChangeCheckedbox} />
                 </div>
             ))}
             {className === 'done' ? '' : <Button

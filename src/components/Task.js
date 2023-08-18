@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useDrag } from 'react-dnd';
-import { ItemTypes } from './constants';
-import Button from './Button';
+import React, { useState, useRef, useEffect } from "react";
+import { useDrag } from "react-dnd";
+import { ItemTypes } from "./constants";
+import Button from "./Button";
 
 export default function Task({
     context,
@@ -14,7 +14,7 @@ export default function Task({
     section,
     onAddTask,
     listChangeCheckedbox,
-    setListChangeCheckedbox
+    setListChangeCheckedbox,
 }) {
     const [, drag] = useDrag({
         type: ItemTypes.TASK,
@@ -50,37 +50,20 @@ export default function Task({
     const handleCheckboxChange = () => {
         setIsChecked((prevIsChecked) => !prevIsChecked);
         const updatedTasks = [...requirementTasks];
-        setListChangeCheckedbox([...listChangeCheckedbox, { title: text, check: check }])
-        console.log('updatedTasks: ', updatedTasks[index])
         updatedTasks[index].check = !isChecked;
-        // setTodos({
-        //     ...todos,
-        //     [section]: updatedTasks,
-        // });
-        // const taskToMove = { ...requirementTasks[index] };
-        // setTaskCheck(taskToMove.check)
-        // taskToMove.check = isChecked ? 0 : 1;
 
-        // if (timeoutRef.current) {
-        //     clearTimeout(timeoutRef.current);
-        // }
-        // const newTimeout = setTimeout(() => {
-        //     if (taskCheck !== taskToMove.check) {
-        //         const updatedSectionTasks = [...todos[section]];
-        //         const updatedTargetTasks = isChecked ? [...todos.todo] : [...todos.done];
+        const uniqueIds = new Set();
+        const uniqueArray = [];
 
-        //         updatedSectionTasks.splice(index, 1);
-        //         updatedTargetTasks.unshift(taskToMove);
+        let temp_array = [...listChangeCheckedbox, updatedTasks[index]];
+        for (const obj of temp_array) {
+            if (!uniqueIds.has(obj.id)) {
+                uniqueIds.add(obj.id);
+                uniqueArray.push(obj);
+            }
+        }
 
-        //         setTodos({
-        //             ...todos,
-        //             [section]: updatedSectionTasks,
-        //             [isChecked ? 'todo' : 'done']: updatedTargetTasks,
-        //         });
-        //     }
-        // }, 3000);
-
-        // timeoutRef.current = newTimeout;
+        setListChangeCheckedbox(uniqueArray);
     };
 
     useEffect(() => {
@@ -91,14 +74,14 @@ export default function Task({
     }, [isEditingTitle]);
 
     return (
-        <div className={`task ${isEditingTitle ? '' : 'dis-flex'}`} ref={drag}>
+        <div className={`task ${isEditingTitle ? "" : "dis-flex"}`} ref={drag}>
             <label className="checkbox-container">
                 <input
                     type="checkbox"
                     checked={isChecked}
                     onChange={handleCheckboxChange}
                 />
-                <span className={`checkmark ${isChecked ? 'checked' : ''}`}></span>
+                <span className={`checkmark ${isChecked ? "checked" : ""}`}></span>
             </label>
             {isEditingTitle ? (
                 <input
@@ -111,7 +94,7 @@ export default function Task({
             ) : (
                 <span
                     onClick={handleTitleClick}
-                    className={`${isChecked ? 'text-decoration' : ''}`}
+                    className={`${isChecked ? "text-decoration" : ""}`}
                 >
                     {text ? text : <input placeholder="new Task" className="new-task" />}
                 </span>

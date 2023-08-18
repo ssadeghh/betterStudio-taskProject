@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react'
-import TodoContainer from './TodoContainer'
+import React, { useEffect, useState } from "react";
+import TodoContainer from "./TodoContainer";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Body() {
     const [todos, setTodos] = useState([]);
 
     const handleDeleteTask = (taskIndex, section) => {
         const updatedTodos = { ...todos };
-        updatedTodos[section] = updatedTodos[section].filter((_, index) => index !== taskIndex);
-        setTodos(updatedTodos)
+        updatedTodos[section] = updatedTodos[section].filter(
+            (_, index) => index !== taskIndex
+        );
+        setTodos(updatedTodos);
     };
 
     const handleAddTask = (newTask, section) => {
         const updatedTodos = { ...todos };
         updatedTodos[section] = [newTask, ...todos[section]];
-        setTodos(updatedTodos)
+        setTodos(updatedTodos);
     };
 
     useEffect(() => {
@@ -22,18 +25,49 @@ export default function Body() {
             // Pre-save initial information
             const preSavedData = {
                 todo: [
-                    { title: 'Start with meditation, exercise & breakfast for a productive day', check: 0 },
-                    { title: 'Read to learn something new every day', check: 0 },
-                    { title: 'Learn something fresh & relevant', check: 0 }
+                    {
+                        id: uuidv4(),
+                        title: "Learn something fresh & relevant",
+                        check: false,
+                    },
+                    {
+                        id: uuidv4(),
+                        title:
+                            "Start with meditation, exercise & breakfast for a productive day",
+                        check: false,
+                    },
+                    {
+                        id: uuidv4(),
+                        title: "Read to learn something new every day",
+                        check: false,
+                    },
                 ],
                 doing: [
-                    { title: 'Engage & question in meetings', check: 0 },
-                    { title: 'Use time-blocking for effective days', check: 0 }
+                    {
+                        id: uuidv4(),
+                        title: "Engage & question in meetings",
+                        check: false,
+                    },
+                    {
+                        id: uuidv4(),
+                        title: "Use time-blocking for effective days",
+                        check: false,
+                    },
                 ],
                 done: [
-                    { title: 'Use time-blocking for effective days', check: 1 },
-                    { title: 'Congratulate yourself for incorporating healthier habits into your lifestyle, like regular exercise or mindful eating', check: 1 }
-                ]
+                    {
+                        id: uuidv4(),
+                        title: "Use time-blocking for effective days",
+                        check: true,
+                    },
+                    {
+                        id: uuidv4(),
+
+                        title:
+                            "Congratulate yourself for incorporating healthier habits into your lifestyle, like regular exercise or mindful eating",
+                        check: true,
+                    },
+                ],
             };
             localStorage.setItem("todos", JSON.stringify(preSavedData));
             localStorage.setItem("hasInitialDataLS", "true");
@@ -47,7 +81,6 @@ export default function Body() {
     }, []);
 
     useEffect(() => {
-        // Update localStorage whenever todos state changes
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos]); // This effect runs whenever todos change
 
@@ -57,28 +90,28 @@ export default function Body() {
                 className="todo"
                 title="Todo"
                 requirementTasks={todos.todo}
-                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'todo')}
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, "todo")}
                 setTodos={setTodos}
                 todos={todos}
-                onAddTask={(newTask) => handleAddTask(newTask, 'todo')}
+                onAddTask={(newTask) => handleAddTask(newTask, "todo")}
             />
             <TodoContainer
                 className="doing"
                 title="Doing 💪"
                 requirementTasks={todos.doing}
-                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'doing')}
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, "doing")}
                 setTodos={setTodos}
                 todos={todos}
-                onAddTask={(newTask) => handleAddTask(newTask, 'doing')}
+                onAddTask={(newTask) => handleAddTask(newTask, "doing")}
             />
             <TodoContainer
                 className="done"
                 title="Done 🎉"
                 requirementTasks={todos.done}
-                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, 'done')}
+                onDeleteTask={(taskIndex) => handleDeleteTask(taskIndex, "done")}
                 setTodos={setTodos}
                 todos={todos}
             />
         </div>
-    )
+    );
 }

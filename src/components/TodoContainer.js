@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Task from './Task'
-import Button from './Button';
-import { useDrop } from 'react-dnd';
-import { ItemTypes } from './constants';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useEffect, useRef } from "react";
+import Task from "./Task";
+import Button from "./Button";
+import { useDrop } from "react-dnd";
+import { ItemTypes } from "./constants";
+import { v4 as uuidv4 } from "uuid";
 
 export default function TodoContainer({
     className,
@@ -16,7 +16,8 @@ export default function TodoContainer({
 }) {
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const ref = useRef();
-    const [listChangeCheckedbox, setListChangeCheckedbox] = useState([])
+    const [listChangeCheckedbox, setListChangeCheckedbox] = useState([]);
+    const timeoutRef = useRef(null);
 
     const [{ isOver }, drop] = useDrop({
         accept: ItemTypes.TASK,
@@ -27,7 +28,7 @@ export default function TodoContainer({
                 const updatedOriginalTasks = [...todos[originalSection]];
                 const updatedNewTasks = [...todos[newSection]];
                 const taskToMove = updatedOriginalTasks.splice(originalIndex, 1)[0];
-                if (className === 'done') {
+                if (className === "done") {
                     taskToMove.check = 1;
                 } else {
                     taskToMove.check = 0;
@@ -47,13 +48,59 @@ export default function TodoContainer({
     });
 
     useEffect(() => {
-        setTimeout(() => {
-            console.log(listChangeCheckedbox);
-            listChangeCheckedbox.forEach((task) => {
-                console.log('task: ', task.title);
-                setTodos((prevTodos) => [...prevTodos, task]);
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        if (listChangeCheckedbox.length > 0) {
+            const filteredTasks = listChangeCheckedbox.filter(
+                (task) =>
+                    todos.todo.every((t) => t.id !== task.id) &&
+                    todos.doing.every((t) => t.id !== task.id) &&
+                    todos.done.every((t) => t.id !== task.id)
+            );
+
+            const updatedTodo = [...todos.todo, ...filteredTasks.filter((task) => !task.check)];
+            const updatedDoing = [...todos.doing, ...filteredTasks.filter((task) => !task.check)];
+            const updatedDone = [...todos.done, ...filteredTasks.filter((task) => task.check)];
+            let finalTodo = []
+            let finalDoing = []
+            let finalDone = []
+
+            updatedDone.forEach(task => {
+                if (task.check == false) {
+                    finalTodo.push(task)
+                } else {
+                    finalDone.push(task)
+                }
             });
-        }, 3000);
+            updatedTodo.forEach(task => {
+                if (task.check == false) {
+                    finalTodo.push(task)
+                } else {
+                    finalDone.push(task)
+                }
+            });
+            updatedDoing.forEach(task => {
+                if (task.check == false) {
+                    finalDoing.push(task)
+                } else {
+                    finalDone.push(task)
+                }
+            });
+            console.log(finalTodo)
+
+            const newTimeout = setTimeout(() => {
+                setTodos({
+                    todo: finalTodo,
+                    doing: finalDoing,
+                    done: finalDone
+                });
+                setListChangeCheckedbox([]);
+            }, 3000);
+
+            timeoutRef.current = newTimeout;
+        }
     }, [listChangeCheckedbox]);
 
     useEffect(() => {
@@ -79,7 +126,11 @@ export default function TodoContainer({
     const tasks = requirementTasks || [];
 
     return (
-        <div className={`${className} todo-container  ${isDraggingOver ? "dragging-over" : ""}`} ref={ref}>
+        <div
+            className={`${className} todo-container  ${isDraggingOver ? "dragging-over" : ""
+                }`}
+            ref={ref}
+        >
             <div className="todo-header">
                 <h3>{title}</h3>
                 <small>{tasks.length} Tasks</small>
@@ -98,12 +149,20 @@ export default function TodoContainer({
                         onAddTask={onAddTask}
                         section={className}
                         listChangeCheckedbox={listChangeCheckedbox}
-                        setListChangeCheckedbox={setListChangeCheckedbox} />
+                        setListChangeCheckedbox={setListChangeCheckedbox}
+                    />
                 </div>
             ))}
-            {className === 'done' ? '' : <Button
-                type='add'
-                onClickFun={() => { onAddTask({ title: '', check: 0 }); }} />}
+            {className === "done" ? (
+                ""
+            ) : (
+                <Button
+                    type="add"
+                    onClickFun={() => {
+                        onAddTask({ id: uuidv4(), title: "", check: 0 });
+                    }}
+                />
+            )}
         </div>
-    )
+    );
 }
